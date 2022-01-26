@@ -91,7 +91,7 @@ def localhost(c):
     os.system(c)
 
 def remotehost(dest, c):
-    os.system("ssh -o StrictHostKeyChecking=no -i ~/.ssh/emerald.pem %s '%s'" % (dest, c))
+    os.system("ssh -o StrictHostKeyChecking=no -i ~/.ssh/lkey %s '%s'" % (dest, c))
 
 dir_flags = " ".join([flag_dir_addr,
                       flag_per_group,
