@@ -4,7 +4,7 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/dedis/kyber/util/random"
+	"go.dedis.ch/kyber/v3/util/random"
 )
 
 // Reblind the messages and randomly permute them

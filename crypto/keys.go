@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/dedis/kyber/util/random"
+	"go.dedis.ch/kyber/v3/util/random"
 )
 
 func GenKey() *KeyPair {

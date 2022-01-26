@@ -5,8 +5,8 @@ import (
 	"log"
 	"sync"
 
-	"github.com/dedis/kyber"
-	dkg "github.com/dedis/kyber/share/dkg/pedersen"
+	"go.dedis.ch/kyber/v3"
+	dkg "go.dedis.ch/kyber/v3/share/dkg/pedersen"
 )
 
 type Threshold struct {

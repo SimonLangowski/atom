@@ -4,7 +4,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/dedis/kyber/util/random"
+	"go.dedis.ch/kyber/v3/util/random"
 
 	"golang.org/x/crypto/nacl/secretbox"
 	"golang.org/x/crypto/sha3"

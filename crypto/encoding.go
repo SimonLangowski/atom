@@ -5,10 +5,10 @@ import (
 	"encoding/binary"
 	"reflect"
 
-	"github.com/dedis/kyber"
-	dkg "github.com/dedis/kyber/share/dkg/pedersen"
-	vss "github.com/dedis/kyber/share/vss/pedersen"
-	"github.com/dedis/protobuf"
+	"go.dedis.ch/kyber/v3"
+	dkg "go.dedis.ch/kyber/v3/share/dkg/pedersen"
+	vss "go.dedis.ch/kyber/v3/share/vss/pedersen"
+	"go.dedis.ch/protobuf"
 )
 
 func (p *Point) MarshalBinary() ([]byte, error) {
@@ -107,6 +107,10 @@ func (d *ThresholdDeal) MarshalBinary() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	err = writeBytes(buf, deal.Signature)
+	if err != nil {
+		return nil, err
+	}
 	return buf.Bytes(), nil
 }
 
@@ -134,6 +138,10 @@ func (d *ThresholdDeal) UnmarshalBinary(data []byte) error {
 		return err
 	}
 	deal.Deal.Cipher, err = readBytes(buf)
+	if err != nil {
+		return err
+	}
+	deal.Signature, err = readBytes(buf)
 	d.D = deal
 	return err
 }

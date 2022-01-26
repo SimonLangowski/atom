@@ -8,10 +8,10 @@ import (
 
 	"golang.org/x/crypto/sha3"
 
-	"github.com/dedis/kyber"
-	"github.com/dedis/kyber/proof"
-	"github.com/dedis/kyber/shuffle"
-	"github.com/dedis/kyber/util/random"
+	"go.dedis.ch/kyber/v3"
+	"go.dedis.ch/kyber/v3/proof"
+	"go.dedis.ch/kyber/v3/shuffle"
+	"go.dedis.ch/kyber/v3/util/random"
 )
 
 func ProveEncrypt(X *PublicKey, msg Message) (Ciphertext, EncProof) {

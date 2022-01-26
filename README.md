@@ -19,7 +19,7 @@ for other projects.
 
 The code requires Go 1.7 or later. The scripts are written in python. Most of
 the crypto operation relies on the [DeDiS kyber
-library](https://github.com/dedis/kyber).
+library](https://go.dedis.ch/kyber/v3).
 
 ## Components
 
