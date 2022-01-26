@@ -33,8 +33,6 @@ parser.add_argument('--mode', metavar='mode', type=int,
                     help='mode of operation')
 
 flags = vars(parser.parse_args(sys.argv[1:]))
-if flags['branch'] == -1:
-    flags['branch'] = flags['groups']
 
 aws = not flags['inst'] == ''
 
@@ -104,8 +102,7 @@ dir_flags = " ".join([flag_dir_addr,
                       flag_num_msgs,
                       flag_msg_size,
                       flag_mode,
-                      flag_net,
-                      flag_branch])
+                      flag_net])
 c = '%s/bin/directory %s' % (gopath, dir_flags)
 if aws:
     directory = threading.Thread(target=remotehost, args=(root[0], c,))
