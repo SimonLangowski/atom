@@ -1,6 +1,7 @@
 package crypto
 
 import (
+	"crypto/cipher"
 	"encoding/binary"
 	"runtime"
 	"sync"
@@ -12,7 +13,24 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-var SUITE = edwards25519.NewBlakeSHA256Ed25519WithRand(blake2xb.New(nil))
+type SafeStream struct {
+	s  cipher.Stream
+	mu sync.Mutex
+}
+
+func (s *SafeStream) XORKeyStream(dst, src []byte) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.s.XORKeyStream(dst, src)
+}
+
+func NewSafeStream(s cipher.Stream) cipher.Stream {
+	return &SafeStream{
+		s: s,
+	}
+}
+
+var SUITE = edwards25519.NewBlakeSHA256Ed25519WithRand(NewSafeStream(blake2xb.New(nil)))
 var refPt = SUITE.Point()
 
 // Basic ElGamal encryption
