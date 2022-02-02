@@ -91,6 +91,11 @@ runs a local Atom experiment with
 * square network
 * trap based protection.
 
+type 0 - butterfly
+type 1 - square
+mode 0 - nizk
+mode 1 - trap
+
 ## Known problems and limitations
 
 The current implementation just runs one round. There is some work that needs
