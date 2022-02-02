@@ -48,6 +48,8 @@ if aws:
                     try:
                         if inst["Tags"][0]["Value"] == "Root":
                             root.append(ip)
+                        else:
+                            ips.append(ip)
                     except:
                         ips.append(ip)
                 except:

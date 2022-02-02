@@ -79,7 +79,7 @@ up, you are ready to run `run.py`. Running
 
 will give you all available options. For example, the following command
 
-    $ /run.py --port 8000 --servers 8 --gsize 4 --groups 4 --clients 4 --trustees 4 --msgs 16 --msize 160 --type 1 --mode 1
+    $ python3 run.py --port 8000 --servers 8 --gsize 4 --groups 4 --clients 4 --trustees 4 --msgs 16 --msize 32 --type 1 --mode 0
 
 runs a local Atom experiment with
 
@@ -87,14 +87,9 @@ runs a local Atom experiment with
 * 4 groups
 * 4 trustees
 * 16 messages per group
-* 160 byte messages
+* 32 byte messages
 * square network
-* trap based protection.
-
-type 0 - butterfly
-type 1 - square
-mode 0 - nizk
-mode 1 - trap
+* nizk protection.
 
 ## Known problems and limitations
 
