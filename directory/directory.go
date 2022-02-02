@@ -47,7 +47,8 @@ type Directory struct {
 }
 
 type DirectoryRPC struct {
-	d *Directory
+	d  *Directory
+	mu sync.Mutex
 }
 
 type Registration struct {
@@ -89,6 +90,8 @@ func (d *DirectoryRPC) RegisterGroup(reg *Registration, _ *int) error {
 
 func (d *DirectoryRPC) RegisterRound(reg *Registration, _ *int) error {
 	d.d.gwg.Done()
+	d.mu.Lock()
+	defer d.mu.Unlock()
 	if key, ok := d.d.RoundKeys[reg.Round]; !ok {
 		d.d.RoundKeys[reg.Round] = reg.Key
 		return nil
@@ -204,7 +207,7 @@ func NewDirectory(id, port, mode, netType,
 	d.gdone.Add(numClients + numServers)
 
 	rpcServer := rpc.NewServer()
-	rpcServer.Register(&DirectoryRPC{d})
+	rpcServer.Register(&DirectoryRPC{d: d})
 	go rpcServer.Accept(l)
 
 	return d, nil
