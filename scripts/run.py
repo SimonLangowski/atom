@@ -21,7 +21,7 @@ parser.add_argument('--groups', metavar='#groups', type=int, default=128,
                     help='number of groups')
 parser.add_argument('--clients', metavar='#clients', type=int, default=128,
                     help='number of clients')
-parser.add_argument('--trustees', metavar='#trustees', type=int, default=23, # group size
+parser.add_argument('--trustees', metavar='#trustees', type=int, default=4, # seems to all be assigned to this server
                     help='number of trustees')
 parser.add_argument('--msgs', metavar='#msgs', type=int, default=78, # total 78 -> 10k, 8 -> 1k
                     help='number of msgs per group')
@@ -100,7 +100,7 @@ def localhost(c):
     os.system(c)
 
 def remotehost(dest, c):
-    os.system("ssh -o StrictHostKeyChecking=no -i ~/.ssh/lkey %s '%s'" % (dest, c))
+    os.system("ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 %s '%s'" % (dest, c))
 
 dir_flags = " ".join([flag_dir_addr,
                       flag_per_group,
