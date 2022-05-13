@@ -716,7 +716,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 			}
 		}
 	} else { // send to neighbors
-		log.Print("Send to neighbors")
+		log.Printf("%d, send to neighbors", s.id)
 		for n, neighbor := range member.group.AdjList {
 			info := ArgInfo{
 				Round: args.Round,
@@ -750,6 +750,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 				}
 			}
 		}
+		log.Printf("%d: Finished send to neighbors", s.id)
 	}
 }
 
@@ -966,6 +967,7 @@ func (s *ServerRPC) Collect(args *CollectArgs, _ *CollectReply) error {
 
 	started := member.roundStarted(args.Round)
 	if !started {
+		log.Print("Starting collector?")
 		member.startRound(args.Round)
 		go s.s.collect(args)
 	}

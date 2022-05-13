@@ -144,9 +144,11 @@ func (m *Member) startRound(round int) {
 }
 
 func (m *Member) roundStarted(round int) bool {
+	log.Printf("%d waiting for round %d", m.sid, round)
 	m.roundLock.Lock()
 	defer m.roundLock.Unlock()
 	_, ok := m.roundInit[round]
+	log.Printf("%d on round %d: %v", m.sid, round, ok)
 	return ok
 }
 
