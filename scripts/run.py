@@ -13,48 +13,55 @@ parser.add_argument('--inst', metavar='instances', type=str, default="",
                     help='file containing json of all available EC2 instances')
 parser.add_argument('--port', metavar='port', type=int, default=8000,
                     help='starting port number for directories and servers')
-parser.add_argument('--servers', metavar='#servers', type=int,
+parser.add_argument('--servers', metavar='#servers', type=int, default=128,
                     help='number of physical servers')
-parser.add_argument('--gsize', metavar='size', type=int,
+parser.add_argument('--gsize', metavar='size', type=int, default=23,
                     help='size of each group')
-parser.add_argument('--groups', metavar='#groups', type=int,
+parser.add_argument('--groups', metavar='#groups', type=int, default=128,
                     help='number of groups')
-parser.add_argument('--clients', metavar='#clients', type=int,
+parser.add_argument('--clients', metavar='#clients', type=int, default=128,
                     help='number of clients')
-parser.add_argument('--trustees', metavar='#trustees', type=int,
+parser.add_argument('--trustees', metavar='#trustees', type=int, default=23, # group size
                     help='number of trustees')
-parser.add_argument('--msgs', metavar='#msgs', type=int,
+parser.add_argument('--msgs', metavar='#msgs', type=int, default=78, # total 78 -> 10k, 8 -> 1k
                     help='number of msgs per group')
-parser.add_argument('--msize', metavar='size', type=int,
+parser.add_argument('--msize', metavar='size', type=int, default=32,
                     help='size of the message')
-parser.add_argument('--type', metavar='type', type=int,
+parser.add_argument('--type', metavar='type', type=int, default=1, # Square
                     help='type of network')
-parser.add_argument('--mode', metavar='mode', type=int,
+parser.add_argument('--mode', metavar='mode', type=int, default=0, # NIZK
                     help='mode of operation')
 
 flags = vars(parser.parse_args(sys.argv[1:]))
 
-aws = not flags['inst'] == ''
+aws = True
 
-if aws:
-    root = []
-    ips = []
-    with open(flags['inst']) as inst_file:
-        insts = json.load(inst_file)
-        for r in insts['Reservations']:
-            for inst in r['Instances']:
-                try:
-                    ip = inst['PrivateIpAddress']
-                    try:
-                        if inst["Tags"][0]["Value"] == "Root":
-                            root.append(ip)
-                        else:
-                            ips.append(ip)
-                    except:
-                        ips.append(ip)
-                except:
-                    pass
-    print("number of servers in pool:", len(ips), len(root))
+# if aws:
+#     root = []
+#     ips = []
+#     with open(flags['inst']) as inst_file:
+#         insts = json.load(inst_file)
+#         for r in insts['Reservations']:
+#             for inst in r['Instances']:
+#                 try:
+#                     ip = inst['PrivateIpAddress']
+#                     try:
+#                         if inst["Tags"][0]["Value"] == "Root":
+#                             root.append(ip)
+#                         else:
+#                             ips.append(ip)
+#                     except:
+#                         ips.append(ip)
+#                 except:
+#                     pass
+#     print("number of servers in pool:", len(ips), len(root))
+
+root = ['172.31.37.99']
+ips = []
+with open('ip.list') as f:
+    lines = f.readlines()
+    for line in lines:
+        ips.append(line.rstrip('\n'))
 
 
 storage = '/tmp'

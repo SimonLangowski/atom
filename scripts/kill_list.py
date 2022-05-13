@@ -1,11 +1,14 @@
 import sys
-import hashlib
-import datetime
 import boto3
-import time
 
-real_run = eval(sys.argv[1])
-#terminate ALL instances
+ip_list = sys.argv[1]
+
+ips = []
+with open(ip_list) as f:
+    lines = f.readlines()
+    for line in lines:
+        ips.append(line.rstrip('\n'))
+
 
 def tagged(instance):
     tags = instance['Tags']
@@ -19,15 +22,13 @@ def chunks(l, n):
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
-regions = ['us-east-2', 'us-east-1', 'us-west-2', 'eu-north-1', 'ap-northeast-1', 'eu-west-2', 'ap-southeast-2', 'sa-east-1']
+regions = ['us-east-2', 'us-east-1']
 
 for r in regions:
+    session = boto3.Session(profile_name='mit')
+    ec2 = session.client('ec2', region_name='us-east-2')
 
-    ec2 = boto3.client('ec2', region_name=r, profile_name='mit')
-
-    response = ec2.describe_instances(
-            DryRun=not real_run,
-    )
+    response = ec2.describe_instances()
 
     instance_ids = []
 
@@ -35,10 +36,10 @@ for r in regions:
         for inst in resp['Instances']:
             if inst['State']['Name'] == 'running' and inst['KeyName'] == 'slangows':
                 if not tagged(inst):
-                    instance_ids.append(inst['InstanceId'])
-
+                    if inst['NetworkInterfaces'][0]['PrivateIpAddress'] in ips:
+                        instance_ids.append(inst['InstanceId'])
+    print(f"Killing {len(instance_ids)} servers")
     for ids in chunks(instance_ids, 100):
         response = ec2.terminate_instances(
-            InstanceIds=ids,
-            DryRun=not real_run
+            InstanceIds=ids
         )
