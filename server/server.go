@@ -469,6 +469,7 @@ func (s *Server) shuffle(args *ShuffleArgs) {
 	}
 
 	if !last { // shuffle and send to next server
+		log.Print("Shuffle and send to next server")
 		idx := -1
 		for i := range args.Group {
 			if args.Group[i] == member.idx {
@@ -491,6 +492,7 @@ func (s *Server) shuffle(args *ShuffleArgs) {
 			log.Fatal("Shuffle request:", err)
 		}
 	} else { // divide and send back to first server
+		log.Print("Divide and send to first server")
 		nextIdx := args.Group[0]
 		next := member.group.Members[nextIdx]
 		info.Cur = nextIdx
@@ -510,6 +512,9 @@ func (s *Server) shuffle(args *ShuffleArgs) {
 }
 
 func (s *Server) verifyShuffle(args *VerifyShuffleArgs) {
+	if args.ArgInfo.Gid == 0 { // just print the first level
+		log.Println("verify shuffle:", args.ArgInfo)
+	}
 	uid := s.partOf[args.Level][args.Gid].Uid
 	member := s.members[uid]
 
@@ -574,6 +579,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 	if s.params.Mode == TRAP_MODE {
 		res = member.reencrypt(args.Round, priv, args.Batches)
 	} else if s.params.Mode == VER_MODE {
+		log.Print("Prove reencrypt")
 		res, proof = member.proveReencrypt(args.Round, priv, args.Batches)
 	}
 
@@ -599,6 +605,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 
 	if s.params.Mode == VER_MODE {
 		// ask all other servers to verify
+		log.Print("Ask all other servers to verify")
 		for _, idx := range args.Group {
 			if idx == args.Cur {
 				continue
@@ -622,6 +629,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 	}
 
 	if !last { // reencrypt and send to next server
+		log.Print("Reencrypt and send to next server")
 		newArgs := ReencryptArgs{
 			Batches: res,
 			ArgInfo: info,
@@ -634,6 +642,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 			log.Fatal(err)
 		}
 	} else if args.Level == s.params.NumLevels-1 { // last level
+		log.Print("last level")
 		// FINISH PROTOCOL
 		msgs := ExtractMessages(res[0])
 		if s.params.Mode == VER_MODE {
@@ -661,6 +670,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 				}
 			}
 		} else {
+			log.Print("Traps")
 			inners, traps, err := ExtractInnerAndTraps(msgs)
 			if err != nil {
 				log.Fatal(err)
@@ -706,6 +716,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 			}
 		}
 	} else { // send to neighbors
+		log.Print("Send to neighbors")
 		for n, neighbor := range member.group.AdjList {
 			info := ArgInfo{
 				Round: args.Round,
