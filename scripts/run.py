@@ -56,7 +56,7 @@ aws = True
 #                     pass
 #     print("number of servers in pool:", len(ips), len(root))
 
-root = ['172.31.37.99']
+root = ['172.16.0.35']
 ips = []
 with open('ip.list') as f:
     lines = f.readlines()
