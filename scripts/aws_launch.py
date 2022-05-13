@@ -10,7 +10,7 @@ real_run = eval(sys.argv[2])
 ip_list = sys.argv[3]
 
 # launch many spot blocks
-ec2 = boto3.resource('ec2')
+ec2 = boto3.resource('ec2', )
 client = boto3.client('ec2')
 
 

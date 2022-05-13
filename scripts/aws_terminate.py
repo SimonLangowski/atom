@@ -23,7 +23,7 @@ regions = ['us-east-2', 'us-east-1', 'us-west-2', 'eu-north-1', 'ap-northeast-1'
 
 for r in regions:
 
-    ec2 = boto3.client('ec2', region_name=r)
+    ec2 = boto3.client('ec2', region_name=r, profile_name='mit')
 
     response = ec2.describe_instances(
             DryRun=not real_run,
