@@ -100,7 +100,8 @@ def localhost(c):
     os.system(c)
 
 def remotehost(dest, c):
-    os.system("ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 %s '%s'" % (dest, c))
+    rcmd = "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 %s '%s'" % (dest, c)
+    return subprocess.run(rcmd, stdout=sys.stdout, stderr=sys.stderr, stdin=subprocess.PIPE, shell=True)
 
 dir_flags = " ".join([flag_dir_addr,
                       flag_per_group,
