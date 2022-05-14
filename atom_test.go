@@ -2,11 +2,8 @@ package atom
 
 import (
 	"crypto/rand"
-	"flag"
 	"fmt"
 	"log"
-	"os"
-	"runtime/pprof"
 	"sync"
 	"testing"
 
@@ -17,7 +14,6 @@ import (
 	"github.com/kwonalbert/atom/trustee"
 
 	. "github.com/kwonalbert/atom/common"
-	. "github.com/kwonalbert/atom/crypto"
 )
 
 var addr = "127.0.0.1:%d"
@@ -28,84 +24,84 @@ var dbPort = 10001
 
 var testNet = SQUARE
 
-var numServers = 9
-var numGroups = 4
-var perGroup = 6
-var numTrustees = 2
+var numServers = 32
+var numGroups = 32
+var perGroup = 23
+var numTrustees = 4
 var faultTolerence = 1
 
 var numMsgs = 16
-var msgSize = 10 // in bytes
+var msgSize = 32 // in bytes
 var threshold = perGroup - faultTolerence
 var numClients = numGroups
 
-var cpuprofile = "cpuprofile"
+// var cpuprofile = "cpuprofile"
 
-func memberMessage(msg Message, msgs []Message) bool {
-	for m := range msgs {
-		if msg.Equal(msgs[m]) {
-			return true
-		}
-	}
-	return false
-}
+// func memberMessage(msg Message, msgs []Message) bool {
+// 	for m := range msgs {
+// 		if msg.Equal(msgs[m]) {
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }
 
-// Should call defer pprof.StopCPUProfile() for the test as well
-func profile() {
-	flag.Parse()
-	if cpuprofile != "" {
-		f, err := os.Create(cpuprofile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-	}
-}
+// // Should call defer pprof.StopCPUProfile() for the test as well
+// func profile() {
+// 	flag.Parse()
+// 	if cpuprofile != "" {
+// 		f, err := os.Create(cpuprofile)
+// 		if err != nil {
+// 			log.Fatal(err)
+// 		}
+// 		pprof.StartCPUProfile(f)
+// 	}
+// }
 
-func TestNIZKMixing(t *testing.T) {
-	dir, _, servers, clients, db := setup(VER_MODE)
+// func TestNIZKMixing(t *testing.T) {
+// 	dir, _, servers, clients, db := setup(VER_MODE)
 
-	plaintextss := make([][][]byte, len(clients))
-	for c := range clients {
-		plaintextss[c] = make([][]byte, numMsgs)
-		for p := range plaintextss[c] {
-			plaintextss[c][p] = make([]byte, msgSize)
-			rand.Read(plaintextss[c][p])
-		}
-	}
+// 	plaintextss := make([][][]byte, len(clients))
+// 	for c := range clients {
+// 		plaintextss[c] = make([][]byte, numMsgs)
+// 		for p := range plaintextss[c] {
+// 			plaintextss[c][p] = make([]byte, msgSize)
+// 			rand.Read(plaintextss[c][p])
+// 		}
+// 	}
 
-	results := make(chan [][]byte, len(clients))
-	for c := range clients {
-		go func(c int) {
-			clients[c].Submit(c, 0, plaintextss[c])
-			res, err := clients[c].DownloadMsgs(0)
-			if err != nil {
-				t.Error(err)
-			}
-			results <- res
-		}(c)
-	}
+// 	results := make(chan [][]byte, len(clients))
+// 	for c := range clients {
+// 		go func(c int) {
+// 			clients[c].Submit(c, 0, plaintextss[c])
+// 			res, err := clients[c].DownloadMsgs(0)
+// 			if err != nil {
+// 				t.Error(err)
+// 			}
+// 			results <- res
+// 		}(c)
+// 	}
 
-	var exp [][]byte
-	for _, plaintexts := range plaintextss {
-		exp = append(exp, plaintexts...)
-	}
+// 	var exp [][]byte
+// 	for _, plaintexts := range plaintextss {
+// 		exp = append(exp, plaintexts...)
+// 	}
 
-	for _ = range clients {
-		res := <-results
-		for r := range res {
-			if !MemberByteSlice(res[r], exp) {
-				t.Error("Missing plaintexts")
-			}
-		}
-	}
+// 	for _ = range clients {
+// 		res := <-results
+// 		for r := range res {
+// 			if !MemberByteSlice(res[r], exp) {
+// 				t.Error("Missing plaintexts")
+// 			}
+// 		}
+// 	}
 
-	dir.Close()
-	db.Close()
-	for _, server := range servers {
-		server.Close()
-	}
-}
+// 	dir.Close()
+// 	db.Close()
+// 	for _, server := range servers {
+// 		server.Close()
+// 	}
+// }
 
 func TestTrapMixing(t *testing.T) {
 	//profile()
