@@ -739,7 +739,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 				next := neighbor.Members[idx]
 
 				var reply ReencryptReply
-				log.Printf("%d sending %d ciphertexts to %d", s.id, len(newArgs.Ciphertexts), s.servers[next])
+				log.Printf("%d sending %d ciphertexts to %d", s.id, len(newArgs.Ciphertexts), next)
 				err := AtomRPC(s.servers[next], "ServerRPC.Collect",
 					&newArgs, &reply, DEFAULT_TIMEOUT)
 				if err != nil {
