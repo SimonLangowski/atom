@@ -58,55 +58,8 @@ var numClients = numGroups
 // 	}
 // }
 
-// func TestNIZKMixing(t *testing.T) {
-// 	dir, _, servers, clients, db := setup(VER_MODE)
-
-// 	plaintextss := make([][][]byte, len(clients))
-// 	for c := range clients {
-// 		plaintextss[c] = make([][]byte, numMsgs)
-// 		for p := range plaintextss[c] {
-// 			plaintextss[c][p] = make([]byte, msgSize)
-// 			rand.Read(plaintextss[c][p])
-// 		}
-// 	}
-
-// 	results := make(chan [][]byte, len(clients))
-// 	for c := range clients {
-// 		go func(c int) {
-// 			clients[c].Submit(c, 0, plaintextss[c])
-// 			res, err := clients[c].DownloadMsgs(0)
-// 			if err != nil {
-// 				t.Error(err)
-// 			}
-// 			results <- res
-// 		}(c)
-// 	}
-
-// 	var exp [][]byte
-// 	for _, plaintexts := range plaintextss {
-// 		exp = append(exp, plaintexts...)
-// 	}
-
-// 	for _ = range clients {
-// 		res := <-results
-// 		for r := range res {
-// 			if !MemberByteSlice(res[r], exp) {
-// 				t.Error("Missing plaintexts")
-// 			}
-// 		}
-// 	}
-
-// 	dir.Close()
-// 	db.Close()
-// 	for _, server := range servers {
-// 		server.Close()
-// 	}
-// }
-
-func TestTrapMixing(t *testing.T) {
-	//profile()
-	//defer pprof.StopCPUProfile()
-	dir, trustees, servers, clients, db := setup(TRAP_MODE)
+func TestNIZKMixing(t *testing.T) {
+	dir, _, servers, clients, db := setup(VER_MODE)
 
 	plaintextss := make([][][]byte, len(clients))
 	for c := range clients {
@@ -145,13 +98,60 @@ func TestTrapMixing(t *testing.T) {
 
 	dir.Close()
 	db.Close()
-	for _, trustee := range trustees {
-		trustee.Close()
-	}
 	for _, server := range servers {
 		server.Close()
 	}
 }
+
+// func TestTrapMixing(t *testing.T) {
+// 	//profile()
+// 	//defer pprof.StopCPUProfile()
+// 	dir, trustees, servers, clients, db := setup(TRAP_MODE)
+
+// 	plaintextss := make([][][]byte, len(clients))
+// 	for c := range clients {
+// 		plaintextss[c] = make([][]byte, numMsgs)
+// 		for p := range plaintextss[c] {
+// 			plaintextss[c][p] = make([]byte, msgSize)
+// 			rand.Read(plaintextss[c][p])
+// 		}
+// 	}
+
+// 	results := make(chan [][]byte, len(clients))
+// 	for c := range clients {
+// 		go func(c int) {
+// 			clients[c].Submit(c, 0, plaintextss[c])
+// 			res, err := clients[c].DownloadMsgs(0)
+// 			if err != nil {
+// 				t.Error(err)
+// 			}
+// 			results <- res
+// 		}(c)
+// 	}
+
+// 	var exp [][]byte
+// 	for _, plaintexts := range plaintextss {
+// 		exp = append(exp, plaintexts...)
+// 	}
+
+// 	for _ = range clients {
+// 		res := <-results
+// 		for r := range res {
+// 			if !MemberByteSlice(res[r], exp) {
+// 				t.Error("Missing plaintexts")
+// 			}
+// 		}
+// 	}
+
+// 	dir.Close()
+// 	db.Close()
+// 	for _, trustee := range trustees {
+// 		trustee.Close()
+// 	}
+// 	for _, server := range servers {
+// 		server.Close()
+// 	}
+// }
 
 func setup(testMode int) (*directory.Directory, []*trustee.Trustee, []*server.Server, []*client.Client, *db.DB) {
 	numTrustees_ := numTrustees
