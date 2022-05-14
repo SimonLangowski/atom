@@ -402,7 +402,7 @@ func (s *Server) collect(args *CollectArgs) {
 	if s.params.Mode == TRAP_MODE && args.Level == 0 {
 		member.commitWait(args.Round)
 	}
-
+	log.Printf("%d: %d %d", s.id, args.Cur, member.idx)
 	if args.Cur == member.idx {
 		go s.shuffle(newArgs)
 	}
@@ -434,6 +434,8 @@ func (s *Server) shuffle(args *ShuffleArgs) {
 	}
 
 	last := args.Group[len(args.Group)-1] == member.idx
+
+	log.Printf("%d: %d %d %v", s.id, args.Group[len(args.Group)-1], member.idx, last)
 
 	info := ArgInfo{
 		Round: args.Round,
