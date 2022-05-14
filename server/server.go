@@ -512,7 +512,7 @@ func (s *Server) shuffle(args *ShuffleArgs) {
 }
 
 func (s *Server) verifyShuffle(args *VerifyShuffleArgs) {
-	log.Printf("%d: verify shuffle: %v", s.id, args.ArgInfo)
+	log.Printf("%d: verify shuffle: %v of %v to %v", s.id, args.ArgInfo, len(args.Old), len(args.New))
 	uid := s.partOf[args.Level][args.Gid].Uid
 	member := s.members[uid]
 
