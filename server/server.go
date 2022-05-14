@@ -550,6 +550,14 @@ func (s *Server) verifyShuffle(args *VerifyShuffleArgs) {
 	}
 }
 
+func ArraySize(a [][]Ciphertext) string {
+	s := "["
+	for _, arr := range a {
+		s = fmt.Sprintf("%s %d", s, len(arr))
+	}
+	return s + "]"
+}
+
 func (s *Server) reencrypt(args *ReencryptArgs) {
 	log.Printf("%d: reencrypt: %v", s.id, args.ArgInfo)
 
@@ -570,6 +578,8 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 		}
 	}
 
+	log.Printf("%d: Input %s", s.id, ArraySize(args.Batches))
+
 	var res [][]Ciphertext
 	var proof [][]ReencProof
 	if s.params.Mode == TRAP_MODE {
@@ -578,6 +588,8 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 		log.Printf("%d: Prove reencrypt", s.id)
 		res, proof = member.proveReencrypt(args.Round, priv, args.Batches)
 	}
+
+	log.Printf("%d: Output %s", s.id, ArraySize(res))
 
 	last := args.Group[len(args.Group)-1] == member.idx
 
