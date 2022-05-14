@@ -932,6 +932,7 @@ func (s *ServerRPC) Submit(args *SubmitArgs, _ *SubmitReply) error {
 			Ciphertexts: args.Ciphertexts,
 			ArgInfo:     args.ArgInfo,
 		}
+		log.Printf("%d: submit collect", s.s.id)
 		go s.s.collect(newArgs)
 	}
 
@@ -950,6 +951,7 @@ func (s *ServerRPC) Commit(args *CommitArgs, _ *CommitReply) error {
 			Id:      args.Id,
 			ArgInfo: args.ArgInfo,
 		}
+		log.Printf("%d: commit collect", s.s.id)
 		go s.s.collect(newArgs)
 	}
 
