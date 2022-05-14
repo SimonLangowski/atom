@@ -111,6 +111,7 @@ func (m *Member) ciphertexts(round int) []atomcrypto.Ciphertext {
 		m.collectLock[round].L.Lock()
 		for len(m.collectBuf[round]) < m.params.NumMsgs {
 			m.collectLock[round].Wait()
+			log.Printf("%d %d has %d in collectBuf", m.sid, m.idx, len(m.collectBuf[round]))
 		}
 		m.collectLock[round].L.Unlock()
 	}
@@ -153,11 +154,10 @@ func (m *Member) roundStarted(round int) bool {
 }
 
 func (m *Member) collect(round int, id int, ciphertexts []atomcrypto.Ciphertext) {
-	log.Printf("%d aquiring collect lock for %d", m.sid, id)
 	m.collectLock[round].L.Lock()
 	m.collectBuf[round] = append(m.collectBuf[round], ciphertexts...)
 	m.collectLock[round].Signal()
-	log.Printf("%d has %d in collectBuf", m.sid, len(m.collectBuf[round]))
+	log.Printf("%d %d from %d to add %d to make %d", m.sid, m.idx, id, len(ciphertexts), len(m.collectBuf[round]))
 	m.collectLock[round].L.Unlock()
 }
 

@@ -12,7 +12,7 @@ ip_list = sys.argv[3]
 
 
 # system parameters that won't change for these experiments
-ami_id = 'ami-09f2a5abcec720eed'
+ami_id = 'ami-06211bd4b008c0e92'
 product_description = 'Linux/UNIX'
 instance_type = 'm5.xlarge'
 # I think m5.xlarge will be in all regions

@@ -401,7 +401,6 @@ func (s *Server) collect(args *CollectArgs) {
 	// entry groups need to wait for commitments too
 	if s.params.Mode == TRAP_MODE && args.Level == 0 {
 		member.commitWait(args.Round)
-		log.Printf("%d: finished commit wait", s.id)
 	}
 	log.Printf("%d: %d %d", s.id, args.Cur, member.idx)
 	if args.Cur == member.idx {
@@ -740,6 +739,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 				next := neighbor.Members[idx]
 
 				var reply ReencryptReply
+				log.Printf("%d sending %d ciphertexts to %d", s.id, len(newArgs.Ciphertexts), s.servers[next])
 				err := AtomRPC(s.servers[next], "ServerRPC.Collect",
 					&newArgs, &reply, DEFAULT_TIMEOUT)
 				if err != nil {
@@ -903,6 +903,8 @@ func (s *ServerRPC) Response(args *ResponseArgs, _ *ResponseReply) error {
 }
 
 func (s *ServerRPC) Submit(args *SubmitArgs, _ *SubmitReply) error {
+
+	log.Printf("%d: submitted %d ciphertexts", s.s.id, len(args.Ciphertexts))
 	if args.Level == 0 {
 		s.s.slock.Lock()
 		s.s.start = time.Now()
@@ -933,7 +935,6 @@ func (s *ServerRPC) Submit(args *SubmitArgs, _ *SubmitReply) error {
 			Ciphertexts: args.Ciphertexts,
 			ArgInfo:     args.ArgInfo,
 		}
-		log.Printf("%d: submit collect", s.s.id)
 		go s.s.collect(newArgs)
 	}
 
@@ -961,14 +962,13 @@ func (s *ServerRPC) Commit(args *CommitArgs, _ *CommitReply) error {
 }
 
 func (s *ServerRPC) Collect(args *CollectArgs, _ *CollectReply) error {
+	log.Printf("%d: was sent %d ciphertexts", s.s.id, len(args.Ciphertexts))
 	uid := s.s.partOf[args.Level][args.Gid].Uid
 	member := s.s.members[uid]
 
 	started := member.roundStarted(args.Round)
 	if !started {
-		log.Printf("%d: Start round collector", s.s.id)
 		member.startRound(args.Round)
-		log.Printf("%d: finish start round", s.s.id)
 		go s.s.collect(args)
 	}
 	member.collect(args.Round, args.Id, args.Ciphertexts)
