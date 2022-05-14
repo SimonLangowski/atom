@@ -24,9 +24,9 @@ var dbPort = 10001
 
 var testNet = SQUARE
 
-var numServers = 32
-var numGroups = 32
-var perGroup = 23
+var numServers = 4
+var numGroups = 4
+var perGroup = 4
 var numTrustees = 4
 var faultTolerence = 1
 
