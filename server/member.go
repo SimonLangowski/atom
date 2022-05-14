@@ -113,6 +113,7 @@ func (m *Member) ciphertexts(round int) []atomcrypto.Ciphertext {
 		}
 		m.collectLock[round].L.Unlock()
 	}
+	log.Printf("%d: got %d ciphertexts", m.sid, len(m.collectBuf[round]))
 	return m.collectBuf[round]
 }
 

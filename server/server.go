@@ -401,6 +401,7 @@ func (s *Server) collect(args *CollectArgs) {
 	// entry groups need to wait for commitments too
 	if s.params.Mode == TRAP_MODE && args.Level == 0 {
 		member.commitWait(args.Round)
+		log.Printf("%d: finished commit wait", s.id)
 	}
 	log.Printf("%d: %d %d", s.id, args.Cur, member.idx)
 	if args.Cur == member.idx {
@@ -967,6 +968,7 @@ func (s *ServerRPC) Collect(args *CollectArgs, _ *CollectReply) error {
 	if !started {
 		log.Printf("%d: Start round collector", s.s.id)
 		member.startRound(args.Round)
+		log.Printf("%d: finish start round", s.s.id)
 		go s.s.collect(args)
 	}
 	member.collect(args.Round, args.Id, args.Ciphertexts)
