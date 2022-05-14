@@ -469,7 +469,7 @@ func (s *Server) shuffle(args *ShuffleArgs) {
 	}
 
 	if !last { // shuffle and send to next server
-		log.Print("Shuffle and send to next server")
+		log.Printf("%d: Shuffle and send to next server", s.id)
 		idx := -1
 		for i := range args.Group {
 			if args.Group[i] == member.idx {
@@ -492,7 +492,7 @@ func (s *Server) shuffle(args *ShuffleArgs) {
 			log.Fatal("Shuffle request:", err)
 		}
 	} else { // divide and send back to first server
-		log.Print("Divide and send to first server")
+		log.Printf("%d: Divide and send to first server", s.id)
 		nextIdx := args.Group[0]
 		next := member.group.Members[nextIdx]
 		info.Cur = nextIdx
