@@ -605,7 +605,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 
 	if s.params.Mode == VER_MODE {
 		// ask all other servers to verify
-		log.Print("Ask all other servers to verify")
+		log.Printf("%d: Ask all other servers to verify", s.id)
 		for _, idx := range args.Group {
 			if idx == args.Cur {
 				continue
@@ -629,7 +629,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 	}
 
 	if !last { // reencrypt and send to next server
-		log.Print("Reencrypt and send to next server")
+		log.Printf("%d: Reencrypt and send to next server", s.id)
 		newArgs := ReencryptArgs{
 			Batches: res,
 			ArgInfo: info,
@@ -642,7 +642,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 			log.Fatal(err)
 		}
 	} else if args.Level == s.params.NumLevels-1 { // last level
-		log.Print("last level")
+		log.Printf("%d: last level", s.id)
 		// FINISH PROTOCOL
 		msgs := ExtractMessages(res[0])
 		if s.params.Mode == VER_MODE {
