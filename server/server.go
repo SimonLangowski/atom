@@ -716,7 +716,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 			}
 		}
 	} else { // send to neighbors
-		log.Printf("%d, send to neighbors", s.id)
+		log.Printf("%d, send to neighbors %d %d %d %d %d %d %d %d %d %d", s.id, s.id, s.id, s.id, s.id, s.id, s.id, s.id, s.id, s.id, s.id)
 		for n, neighbor := range member.group.AdjList {
 			info := ArgInfo{
 				Round: args.Round,
@@ -750,7 +750,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 				}
 			}
 		}
-		log.Printf("%d: Finished send to neighbors", s.id)
+		log.Printf("%d: Finished send to neighbors %d %d %d %d %d %d %d %d %d %d", s.id, s.id, s.id, s.id, s.id, s.id, s.id, s.id, s.id, s.id, s.id)
 	}
 }
 
