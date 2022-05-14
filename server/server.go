@@ -409,9 +409,7 @@ func (s *Server) collect(args *CollectArgs) {
 }
 
 func (s *Server) shuffle(args *ShuffleArgs) {
-	if args.ArgInfo.Gid == 0 { // just print the first level
-		log.Println("shuffle:", args.ArgInfo)
-	}
+	log.Printf("%d shuffle: %v", s.id, args.ArgInfo)
 
 	uid := s.partOf[args.Level][args.Gid].Uid
 	member := s.members[uid]
@@ -512,9 +510,7 @@ func (s *Server) shuffle(args *ShuffleArgs) {
 }
 
 func (s *Server) verifyShuffle(args *VerifyShuffleArgs) {
-	if args.ArgInfo.Gid == 0 { // just print the first level
-		log.Println("verify shuffle:", args.ArgInfo)
-	}
+	log.Printf("%d: verify shuffle: %v", s.id, args.ArgInfo)
 	uid := s.partOf[args.Level][args.Gid].Uid
 	member := s.members[uid]
 
@@ -553,9 +549,7 @@ func (s *Server) verifyShuffle(args *VerifyShuffleArgs) {
 }
 
 func (s *Server) reencrypt(args *ReencryptArgs) {
-	if args.ArgInfo.Gid == 0 { // just print the first level
-		log.Println("reencrypt:", args.ArgInfo)
-	}
+	log.Printf("%d: reencrypt: %v", s.id, args.ArgInfo)
 
 	uid := s.partOf[args.Level][args.Gid].Uid
 	member := s.members[uid]
