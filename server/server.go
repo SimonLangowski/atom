@@ -579,7 +579,7 @@ func (s *Server) reencrypt(args *ReencryptArgs) {
 	if s.params.Mode == TRAP_MODE {
 		res = member.reencrypt(args.Round, priv, args.Batches)
 	} else if s.params.Mode == VER_MODE {
-		log.Print("Prove reencrypt")
+		log.Printf("%d: Prove reencrypt", s.id)
 		res, proof = member.proveReencrypt(args.Round, priv, args.Batches)
 	}
 
@@ -967,7 +967,7 @@ func (s *ServerRPC) Collect(args *CollectArgs, _ *CollectReply) error {
 
 	started := member.roundStarted(args.Round)
 	if !started {
-		log.Print("Starting collector?")
+		log.Printf("%d: Start round collector", s.s.id)
 		member.startRound(args.Round)
 		go s.s.collect(args)
 	}
