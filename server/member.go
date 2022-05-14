@@ -144,18 +144,18 @@ func (m *Member) startRound(round int) {
 }
 
 func (m *Member) roundStarted(round int) bool {
-	log.Printf("%d waiting for round %d", m.sid, round)
 	m.roundLock.Lock()
 	defer m.roundLock.Unlock()
 	_, ok := m.roundInit[round]
-	log.Printf("%d on round %d: %v", m.sid, round, ok)
 	return ok
 }
 
 func (m *Member) collect(round int, id int, ciphertexts []atomcrypto.Ciphertext) {
+	log.Printf("%d aquiring collect lock for %d", m.sid, id)
 	m.collectLock[round].L.Lock()
 	m.collectBuf[round] = append(m.collectBuf[round], ciphertexts...)
 	m.collectLock[round].Signal()
+	log.Printf("%d has %d in collectBuf", m.sid, len(m.collectBuf[round]))
 	m.collectLock[round].L.Unlock()
 }
 
