@@ -28,9 +28,9 @@ var numServers = 4
 var numGroups = 4
 var perGroup = 4
 var numTrustees = 4
-var faultTolerence = 1
+var faultTolerence = 0
 
-var numMsgs = 16
+var numMsgs = 10
 var msgSize = 32 // in bytes
 var threshold = perGroup - faultTolerence
 var numClients = numGroups
